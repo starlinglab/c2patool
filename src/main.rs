@@ -180,7 +180,11 @@ fn main() -> Result<()> {
             std::fs::create_dir_all(&output_dir)?;
 
             let signer = get_c2pa_signer(&manifest_config)?;
-
+            
+            // Replace thumbnail with content of  black.jpg
+            manifest
+                .set_thumbnail("image/jpeg", std::fs::read("black.jpg").unwrap());  
+            
             manifest
                 .embed(&args.path, &output, signer.as_ref())
                 .context("embedding manifest")?;
