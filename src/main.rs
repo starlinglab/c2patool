@@ -91,6 +91,14 @@ struct CliArgs {
 
     #[structopt(long = "info", help = "Show manifest size, XMP url and other stats")]
     info: bool,
+
+    #[structopt(
+        short = "t",
+        long = "thumb",
+        help = "Specifies thumbnail to use in manifest"
+    )]
+    external_thumb: Option<String>,
+
 }
 
 // prints the requested kind of report or exits with error
@@ -180,11 +188,12 @@ fn main() -> Result<()> {
             std::fs::create_dir_all(&output_dir)?;
 
             let signer = get_c2pa_signer(&manifest_config)?;
-            
-            // Replace thumbnail with content of  black.jpg
-            manifest
-                .set_thumbnail("image/jpeg", std::fs::read("black.jpg").unwrap());  
-            
+
+            if let Some(external_thumb) = args.external_thumb {
+                manifest
+                    .set_thumbnail("image/jpeg", std::fs::read(external_thumb).unwrap());
+            }
+
             manifest
                 .embed(&args.path, &output, signer.as_ref())
                 .context("embedding manifest")?;
