@@ -191,7 +191,7 @@ fn main() -> Result<()> {
 
             if let Some(external_thumb) = args.external_thumb {
                 manifest
-                    .set_thumbnail("image/jpeg", std::fs::read(external_thumb).unwrap());
+                    .set_thumbnail("image/png", std::fs::read(external_thumb).unwrap());
             }
 
             manifest
